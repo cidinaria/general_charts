@@ -6,7 +6,7 @@ Este arquivo contém o script em R para gerar diversos gráficos comuns em anál
 
 ```R
 ###############################################################
-# 8. CURVA DE SOBREVIVÊNCIA
+# 1. CURVA DE SOBREVIVÊNCIA
 ###############################################################
 surv_data <- data.frame(
   time = rexp(100,0.05), status = sample(c(0,1),100,replace=TRUE),
@@ -15,31 +15,31 @@ surv_data <- data.frame(
 fit <- survfit(Surv(time,status)~Group, data=surv_data)
 p_surv <- ggsurvplot(fit, data=surv_data, pval=TRUE, risk.table=TRUE, title="Kaplan-Meier Survival Curve")
 
-png("8_survival_curve.png", width=2100, height=1800, res=300)
+png("1_survival_curve.png", width=2100, height=1800, res=300)
 print(p_surv)
 dev.off()
 
 ```
 
-![Survival curve](figures/8_survival_curve.png)
+![Survival curve](figures/1_survival_curve.png)
 
 # 2. CURVA ROC
 
 ```R
 ###############################################################
-# 7. CURVA ROC
+# 2. CURVA ROC
 ###############################################################
 response <- sample(c(0,1),100,replace=TRUE)
 prediction <- runif(100)
 roc_obj <- roc(response,prediction)
 
-png("7_roc_curve.png", width=1800, height=1800, res=300)
+png("2_roc_curve.png", width=1800, height=1800, res=300)
 plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
 dev.off()
 
 ```
 
-![ROC curve](figures/7_roc_curve.png)
+![ROC curve](figures/2_roc_curve.png)
 
 # 3. PCA PLOT
 
@@ -215,10 +215,10 @@ ggplot(volcano, aes(x = log2FC, y = -log10(padj), color = Status)) +
   )
 
 # Salvando a figura em PNG com alta resolução
-ggsave("1_volcano_plot.png", width = 8, height = 7, dpi = 300)
+ggsave("7_volcano_plot.png", width = 8, height = 7, dpi = 300)
 ```
 
-![Volcano Plot](figures/1_volcano_plot.png)
+![Volcano Plot](figures/7_volcano_plot.png)
 
 # 8. HEATMAP DE EXPRESSÃO GÊNICA
 
@@ -234,10 +234,10 @@ rownames(annotation) <- colnames(expr)
 
 pheatmap(
   expr, scale="row", annotation_col = annotation, show_rownames = FALSE,
-  main="Heatmap", filename="2_heatmap.png", width=7, height=7
+  main="Heatmap", filename="8_heatmap.png", width=7, height=7
 )
 
 ```
 
-![Heatmap](figures/2_heatmap.pn)
+![Heatmap](figures/8_heatmap.png)
 
