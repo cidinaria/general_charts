@@ -2,6 +2,8 @@
 
 Este arquivo contém o script em R para gerar diversos gráficos comuns em análises de bioinformática utilizando dados simulados. 
 
+# 1. VOLCANO PLOT
+
 ```R
 ###############################################################
 # Gráficos em Bioinformática com Dados Fictícios
@@ -104,9 +106,10 @@ ggplot(volcano, aes(x = log2FC, y = -log10(padj), color = Status)) +
 # Salvando a figura em PNG com alta resolução
 ggsave("1_volcano_plot.png", width = 8, height = 7, dpi = 300)
 ```
-# 1. VOLCANO PLOT
 
 ![Volcano Plot](figures/1_volcano_plot.png)
+
+# 2. HEATMAP DE EXPRESSÃO GÊNICA
 
 ```R
 ###############################################################
@@ -124,9 +127,10 @@ pheatmap(
 )
 
 ```
-# 2. HEATMAP DE EXPRESSÃO GÊNICA
 
 ![Heatmap](figures/2_heatmap.pn)
+
+# 3. PCA PLOT
 
 ```R
 ###############################################################
@@ -140,9 +144,11 @@ ggplot(pca_df,aes(PC1,PC2,color=Group))+
 ggsave("3_pca_plot.png", width=7, height=6, dpi=300)
 
 ```
-# 3. PCA PLOT
 
 ![PCA Plot](figures/3_pca_plot.png)
+
+# 4. MA PLOT
+
 ```R
 ###############################################################
 # 4. MA PLOT
@@ -154,9 +160,12 @@ ggplot(ma,aes(log10(meanExp),logFC))+
 ggsave("4_ma_plot.png", width=7, height=6, dpi=300)
 
 ```
-# 4. MA PLOT
 
 ![MA Plot](figures/4_ma_plot.png)
+
+# 5. BOXPLOT DE NORMALIZAÇÃO
+
+
 ```R
 ###############################################################
 # 5. BOXPLOT DE NORMALIZAÇÃO
@@ -170,9 +179,11 @@ ggplot(box_data, aes(Sample,Expression,fill=Sample))+
 ggsave("5_boxplot_expressao.png", width=7, height=6, dpi=300)
 
 ```
-# 5. BOXPLOT DE NORMALIZAÇÃO
 
 ![Boxplot](figures/5_boxplot_expressao.png)
+
+# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
+
 ```R
 ###############################################################
 # 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
@@ -188,9 +199,11 @@ ggplot(go, aes(reorder(Pathway,NES),NES))+
 ggsave("6_functional_enrichment.png", width=7, height=5, dpi=300)
 
 ```
-# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
 
 ![Functional Enrichment](figures/6_functional_enrichment.png)
+
+# 7. CURVA ROC
+
 ```R
 ###############################################################
 # 7. CURVA ROC
@@ -204,9 +217,11 @@ plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
 dev.off()
 
 ```
-# 7. CURVA ROC
 
 ![ROC curve](figures/7_roc_curve.png)
+
+# 8. CURVA DE SOBREVIVÊNCIA
+
 ```R
 ###############################################################
 # 8. CURVA DE SOBREVIVÊNCIA
@@ -223,6 +238,5 @@ print(p_surv)
 dev.off()
 
 ```
-# 8. CURVA DE SOBREVIVÊNCIA
 
 ![Survival curve](figures/8_survival_curve.png)
