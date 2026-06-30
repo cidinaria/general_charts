@@ -2,6 +2,117 @@
 
 Este arquivo contém o script em R para gerar diversos gráficos comuns em análises de bioinformática utilizando dados simulados. 
 
+# 3. PCA PLOT
+
+```R
+###############################################################
+# 3. PCA PLOT
+###############################################################
+pca <- prcomp(t(expr),scale.=TRUE)
+pca_df <- data.frame(PC1=pca$x[,1], PC2=pca$x[,2], Group=annotation$Group)
+
+ggplot(pca_df,aes(PC1,PC2,color=Group))+
+  geom_point(size=4)+ theme_bw()+ ggtitle("PCA Plot")
+ggsave("3_pca_plot.png", width=7, height=6, dpi=300)
+
+```
+
+![PCA Plot](figures/3_pca_plot.png)
+
+# 4. MA PLOT
+
+```R
+###############################################################
+# 4. MA PLOT
+###############################################################
+ma <- data.frame(meanExp = runif(n_genes,1,10000), logFC = rnorm(n_genes,0,2))
+ggplot(ma,aes(log10(meanExp),logFC))+
+  geom_point(alpha=0.5)+ geom_hline(yintercept=c(-1,1), linetype="dashed")+
+  theme_bw()+ ggtitle("MA Plot")
+ggsave("4_ma_plot.png", width=7, height=6, dpi=300)
+
+```
+
+![MA Plot](figures/4_ma_plot.png)
+
+# 5. BOXPLOT DE NORMALIZAÇÃO
+
+
+```R
+###############################################################
+# 5. BOXPLOT DE NORMALIZAÇÃO
+###############################################################
+box_data <- data.frame(
+  Expression = c(rnorm(1000,10,2), rnorm(1000,11,2), rnorm(1000,9,2), rnorm(1000,10,2)),
+  Sample = rep(c("S1","S2","S3","S4"), each=1000)
+)
+ggplot(box_data, aes(Sample,Expression,fill=Sample))+
+  geom_boxplot()+ theme_bw()+ ggtitle("Boxplot de Expressão")
+ggsave("5_boxplot_expressao.png", width=7, height=6, dpi=300)
+
+```
+
+![Boxplot](figures/5_boxplot_expressao.png)
+
+# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
+
+```R
+###############################################################
+# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
+###############################################################
+go <- data.frame(
+  Pathway=c("T cell activation", "Interferon signaling", "Antigen presentation", 
+            "Cytokine signaling", "Apoptosis", "Cell cycle", "MAPK pathway", "JAK-STAT"),
+  NES=sort(runif(8,1,4),decreasing = TRUE)
+)
+ggplot(go, aes(reorder(Pathway,NES),NES))+
+  geom_bar(stat="identity")+ coord_flip()+ theme_bw()+
+  ylab("Normalized Enrichment Score")+ xlab("")+ ggtitle("Functional Enrichment")
+ggsave("6_functional_enrichment.png", width=7, height=5, dpi=300)
+
+```
+
+![Functional Enrichment](figures/6_functional_enrichment.png)
+
+# 7. CURVA ROC
+
+```R
+###############################################################
+# 7. CURVA ROC
+###############################################################
+response <- sample(c(0,1),100,replace=TRUE)
+prediction <- runif(100)
+roc_obj <- roc(response,prediction)
+
+png("7_roc_curve.png", width=1800, height=1800, res=300)
+plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
+dev.off()
+
+```
+
+![ROC curve](figures/7_roc_curve.png)
+
+# 8. CURVA DE SOBREVIVÊNCIA
+
+```R
+###############################################################
+# 8. CURVA DE SOBREVIVÊNCIA
+###############################################################
+surv_data <- data.frame(
+  time = rexp(100,0.05), status = sample(c(0,1),100,replace=TRUE),
+  Group = sample(c("High Expression", "Low Expression"), 100, replace=TRUE)
+)
+fit <- survfit(Surv(time,status)~Group, data=surv_data)
+p_surv <- ggsurvplot(fit, data=surv_data, pval=TRUE, risk.table=TRUE, title="Kaplan-Meier Survival Curve")
+
+png("8_survival_curve.png", width=2100, height=1800, res=300)
+print(p_surv)
+dev.off()
+
+```
+
+![Survival curve](figures/8_survival_curve.png)
+
 # 1. VOLCANO PLOT
 
 ```R
@@ -130,113 +241,3 @@ pheatmap(
 
 ![Heatmap](figures/2_heatmap.pn)
 
-# 3. PCA PLOT
-
-```R
-###############################################################
-# 3. PCA PLOT
-###############################################################
-pca <- prcomp(t(expr),scale.=TRUE)
-pca_df <- data.frame(PC1=pca$x[,1], PC2=pca$x[,2], Group=annotation$Group)
-
-ggplot(pca_df,aes(PC1,PC2,color=Group))+
-  geom_point(size=4)+ theme_bw()+ ggtitle("PCA Plot")
-ggsave("3_pca_plot.png", width=7, height=6, dpi=300)
-
-```
-
-![PCA Plot](figures/3_pca_plot.png)
-
-# 4. MA PLOT
-
-```R
-###############################################################
-# 4. MA PLOT
-###############################################################
-ma <- data.frame(meanExp = runif(n_genes,1,10000), logFC = rnorm(n_genes,0,2))
-ggplot(ma,aes(log10(meanExp),logFC))+
-  geom_point(alpha=0.5)+ geom_hline(yintercept=c(-1,1), linetype="dashed")+
-  theme_bw()+ ggtitle("MA Plot")
-ggsave("4_ma_plot.png", width=7, height=6, dpi=300)
-
-```
-
-![MA Plot](figures/4_ma_plot.png)
-
-# 5. BOXPLOT DE NORMALIZAÇÃO
-
-
-```R
-###############################################################
-# 5. BOXPLOT DE NORMALIZAÇÃO
-###############################################################
-box_data <- data.frame(
-  Expression = c(rnorm(1000,10,2), rnorm(1000,11,2), rnorm(1000,9,2), rnorm(1000,10,2)),
-  Sample = rep(c("S1","S2","S3","S4"), each=1000)
-)
-ggplot(box_data, aes(Sample,Expression,fill=Sample))+
-  geom_boxplot()+ theme_bw()+ ggtitle("Boxplot de Expressão")
-ggsave("5_boxplot_expressao.png", width=7, height=6, dpi=300)
-
-```
-
-![Boxplot](figures/5_boxplot_expressao.png)
-
-# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
-
-```R
-###############################################################
-# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
-###############################################################
-go <- data.frame(
-  Pathway=c("T cell activation", "Interferon signaling", "Antigen presentation", 
-            "Cytokine signaling", "Apoptosis", "Cell cycle", "MAPK pathway", "JAK-STAT"),
-  NES=sort(runif(8,1,4),decreasing = TRUE)
-)
-ggplot(go, aes(reorder(Pathway,NES),NES))+
-  geom_bar(stat="identity")+ coord_flip()+ theme_bw()+
-  ylab("Normalized Enrichment Score")+ xlab("")+ ggtitle("Functional Enrichment")
-ggsave("6_functional_enrichment.png", width=7, height=5, dpi=300)
-
-```
-
-![Functional Enrichment](figures/6_functional_enrichment.png)
-
-# 7. CURVA ROC
-
-```R
-###############################################################
-# 7. CURVA ROC
-###############################################################
-response <- sample(c(0,1),100,replace=TRUE)
-prediction <- runif(100)
-roc_obj <- roc(response,prediction)
-
-png("7_roc_curve.png", width=1800, height=1800, res=300)
-plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
-dev.off()
-
-```
-
-![ROC curve](figures/7_roc_curve.png)
-
-# 8. CURVA DE SOBREVIVÊNCIA
-
-```R
-###############################################################
-# 8. CURVA DE SOBREVIVÊNCIA
-###############################################################
-surv_data <- data.frame(
-  time = rexp(100,0.05), status = sample(c(0,1),100,replace=TRUE),
-  Group = sample(c("High Expression", "Low Expression"), 100, replace=TRUE)
-)
-fit <- survfit(Surv(time,status)~Group, data=surv_data)
-p_surv <- ggsurvplot(fit, data=surv_data, pval=TRUE, risk.table=TRUE, title="Kaplan-Meier Survival Curve")
-
-png("8_survival_curve.png", width=2100, height=1800, res=300)
-print(p_surv)
-dev.off()
-
-```
-
-![Survival curve](figures/8_survival_curve.png)
