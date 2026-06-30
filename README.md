@@ -2,6 +2,45 @@
 
 Este arquivo contém o script em R para gerar diversos gráficos comuns em análises de bioinformática utilizando dados simulados. 
 
+# 1. CURVA DE SOBREVIVÊNCIA
+
+```R
+###############################################################
+# 8. CURVA DE SOBREVIVÊNCIA
+###############################################################
+surv_data <- data.frame(
+  time = rexp(100,0.05), status = sample(c(0,1),100,replace=TRUE),
+  Group = sample(c("High Expression", "Low Expression"), 100, replace=TRUE)
+)
+fit <- survfit(Surv(time,status)~Group, data=surv_data)
+p_surv <- ggsurvplot(fit, data=surv_data, pval=TRUE, risk.table=TRUE, title="Kaplan-Meier Survival Curve")
+
+png("8_survival_curve.png", width=2100, height=1800, res=300)
+print(p_surv)
+dev.off()
+
+```
+
+![Survival curve](figures/8_survival_curve.png)
+
+# 2. CURVA ROC
+
+```R
+###############################################################
+# 7. CURVA ROC
+###############################################################
+response <- sample(c(0,1),100,replace=TRUE)
+prediction <- runif(100)
+roc_obj <- roc(response,prediction)
+
+png("7_roc_curve.png", width=1800, height=1800, res=300)
+plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
+dev.off()
+
+```
+
+![ROC curve](figures/7_roc_curve.png)
+
 # 3. PCA PLOT
 
 ```R
@@ -74,46 +113,7 @@ ggsave("6_functional_enrichment.png", width=7, height=5, dpi=300)
 
 ![Functional Enrichment](figures/6_functional_enrichment.png)
 
-# 7. CURVA ROC
-
-```R
-###############################################################
-# 7. CURVA ROC
-###############################################################
-response <- sample(c(0,1),100,replace=TRUE)
-prediction <- runif(100)
-roc_obj <- roc(response,prediction)
-
-png("7_roc_curve.png", width=1800, height=1800, res=300)
-plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
-dev.off()
-
-```
-
-![ROC curve](figures/7_roc_curve.png)
-
-# 8. CURVA DE SOBREVIVÊNCIA
-
-```R
-###############################################################
-# 8. CURVA DE SOBREVIVÊNCIA
-###############################################################
-surv_data <- data.frame(
-  time = rexp(100,0.05), status = sample(c(0,1),100,replace=TRUE),
-  Group = sample(c("High Expression", "Low Expression"), 100, replace=TRUE)
-)
-fit <- survfit(Surv(time,status)~Group, data=surv_data)
-p_surv <- ggsurvplot(fit, data=surv_data, pval=TRUE, risk.table=TRUE, title="Kaplan-Meier Survival Curve")
-
-png("8_survival_curve.png", width=2100, height=1800, res=300)
-print(p_surv)
-dev.off()
-
-```
-
-![Survival curve](figures/8_survival_curve.png)
-
-# 1. VOLCANO PLOT
+# 7. VOLCANO PLOT
 
 ```R
 ###############################################################
@@ -220,7 +220,7 @@ ggsave("1_volcano_plot.png", width = 8, height = 7, dpi = 300)
 
 ![Volcano Plot](figures/1_volcano_plot.png)
 
-# 2. HEATMAP DE EXPRESSÃO GÊNICA
+# 8. HEATMAP DE EXPRESSÃO GÊNICA
 
 ```R
 ###############################################################
