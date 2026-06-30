@@ -1,12 +1,10 @@
 # Scripts em R para Gráficos de Bioinformática
 
-Este arquivo contém o script em R atualizado e otimizado para gerar diversos gráficos comuns em análises de bioinformática utilizando dados simulados. 
-
-O **Volcano Plot** foi ajustado especificamente para corrigir a distribuição dos p-valores fictícios e espelhar fielmente o padrão estético profissional do modelo fornecido (cores corretas, limites tracejados, eixos limpos e identificação de genes via `ggrepel`). Todos os gráficos possuem comandos automáticos para salvar o resultado em formato `.png` de alta resolução.
+Este arquivo contém o script em R para gerar diversos gráficos comuns em análises de bioinformática utilizando dados simulados. 
 
 ```R
 ###############################################################
-# Exemplos de Gráficos em Bioinformática com Dados Fictícios
+# Gráficos em Bioinformática com Dados Fictícios
 ###############################################################
 
 library(ggplot2)
@@ -21,7 +19,7 @@ library(ggrepel)
 set.seed(123)
 
 ###############################################################
-# 1. VOLCANO PLOT (ESTILIZADO E CORRIGIDO)
+# 1. VOLCANO PLOT
 ###############################################################
 
 n_genes <- 3000
@@ -104,9 +102,13 @@ ggplot(volcano, aes(x = log2FC, y = -log10(padj), color = Status)) +
   )
 
 # Salvando a figura em PNG com alta resolução
-ggsave("1_volcano_plot_estilizado.png", width = 8, height = 7, dpi = 300)
+ggsave("1_volcano_plot.png", width = 8, height = 7, dpi = 300)
+```
+# 1. VOLCANO PLOT
 
+![Volcano Plot](figures/1_volcano_plot.png)
 
+```R
 ###############################################################
 # 2. HEATMAP DE EXPRESSÃO GÊNICA
 ###############################################################
@@ -121,6 +123,12 @@ pheatmap(
   main="Heatmap", filename="2_heatmap.png", width=7, height=7
 )
 
+```
+# 2. HEATMAP DE EXPRESSÃO GÊNICA
+
+![Heatmap](figures/2_heatmap.pn)
+
+```R
 ###############################################################
 # 3. PCA PLOT
 ###############################################################
@@ -131,6 +139,11 @@ ggplot(pca_df,aes(PC1,PC2,color=Group))+
   geom_point(size=4)+ theme_bw()+ ggtitle("PCA Plot")
 ggsave("3_pca_plot.png", width=7, height=6, dpi=300)
 
+```
+# 3. PCA PLOT
+
+![PCA Plot](figures/3_pca_plot.png)
+```R
 ###############################################################
 # 4. MA PLOT
 ###############################################################
@@ -140,6 +153,11 @@ ggplot(ma,aes(log10(meanExp),logFC))+
   theme_bw()+ ggtitle("MA Plot")
 ggsave("4_ma_plot.png", width=7, height=6, dpi=300)
 
+```
+# 4. MA PLOT
+
+![MA Plot](figures/4_ma_plot.png)
+```R
 ###############################################################
 # 5. BOXPLOT DE NORMALIZAÇÃO
 ###############################################################
@@ -151,6 +169,11 @@ ggplot(box_data, aes(Sample,Expression,fill=Sample))+
   geom_boxplot()+ theme_bw()+ ggtitle("Boxplot de Expressão")
 ggsave("5_boxplot_expressao.png", width=7, height=6, dpi=300)
 
+```
+# 5. BOXPLOT DE NORMALIZAÇÃO
+
+![Boxplot](figures/5_boxplot_expressao.png)
+```R
 ###############################################################
 # 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
 ###############################################################
@@ -164,6 +187,11 @@ ggplot(go, aes(reorder(Pathway,NES),NES))+
   ylab("Normalized Enrichment Score")+ xlab("")+ ggtitle("Functional Enrichment")
 ggsave("6_functional_enrichment.png", width=7, height=5, dpi=300)
 
+```
+# 6. BARPLOT DE ENRIQUECIMENTO FUNCIONAL
+
+![Functional Enrichment](figures/6_functional_enrichment.png)
+```R
 ###############################################################
 # 7. CURVA ROC
 ###############################################################
@@ -175,6 +203,11 @@ png("7_roc_curve.png", width=1800, height=1800, res=300)
 plot(roc_obj, main=paste0("ROC Curve (AUC = ", round(auc(roc_obj),3), ")"))
 dev.off()
 
+```
+# 7. CURVA ROC
+
+![ROC curve](figures/7_roc_curve.png)
+```R
 ###############################################################
 # 8. CURVA DE SOBREVIVÊNCIA
 ###############################################################
@@ -189,6 +222,7 @@ png("8_survival_curve.png", width=2100, height=1800, res=300)
 print(p_surv)
 dev.off()
 
-###############################################################
-# FIM
-###############################################################
+```
+# 8. CURVA DE SOBREVIVÊNCIA
+
+![Survival curve](figures/8_survival_curve.png)
